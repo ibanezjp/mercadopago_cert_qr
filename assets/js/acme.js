@@ -58,13 +58,15 @@ $(document).ready(function() {
 		    // Muestra el código QR del punto de venta seleccionado
 
 		    // Llama al servicio de obtención de información de un POS/QR en base al external_pos_id o también llamado external_id
-			$.get("api/pos/get/",{"external_id":external_id},function(data){
+			$.get("http://localhost:7071/api/pos", {"external_id": external_id, "external_store_id": store_id }, function(data)
+			{
 				console.log("Obtención información de QR:");
 				console.log(data);
 
 				// Si existe external_ID...
 
-				if(data.paging.total>0){
+				if(data.paging.total > 0)
+				{
 			
 					// Muestra el código QR en pantalla:
 
@@ -321,14 +323,24 @@ $(document).ready(function() {
 		var addressReference = $('#addressReference').val();
 		var externalStoreID = $('#externalStoreID').val();
 
+		var storeJSON = 
+		{  
+			name : storeName,
+			location : {  
+			   street_number : streetNumber,
+			   street_name : streetName,
+			   city_name : city,
+			   state_name : state,
+			   latitude : latitude,
+			   longitude : longitude,
+			   reference : addressReference,
 
-		// REVISA AQUÍ:
-		// Modifica el storeJSON con la estructura necesaria para crear una Store correctamente.
-
-		var storeJSON = {}
+			},
+			external_id : externalStoreID
+		 };
 
 		console.log(storeJSON);
-		$.post("api/store/create/",{json:JSON.stringify(storeJSON)},function(results){
+		$.post("http://localhost:7071/api/store/create",JSON.stringify(storeJSON),function(results){
 			console.log("Crea store:");
 			console.log(results);
 			$("#responseStore").text(JSON.stringify(results));
@@ -345,29 +357,22 @@ $(document).ready(function() {
 		var externalStoreID=$('#externalStoreIDPOS').val();
 		var externalPOSID=$('#externalPOSID').val();
 
-		// REVISA AQUÍ:
+		var category = 621102;   // Agrega aquí el número de categoría o MCC necesario para 
+								 // Identificar al POS de restaurante
 
-		var category = 1;   // Agrega aquí el número de categoría o MCC necesario para 
-							// Identificar al POS de restaurante
+		var posJSON =
+		{
+			"name" : posName,
+			"external_store_id" : externalStoreID,
+			"fixed_amount" : true,
+			"category" : category,
+			"external_id" : externalPOSID
+		};
 
-
-		// REVISA AQUÍ:
-		// Comprueba que el posJSON sea el adecuado para crear un POS integrado correctamente.
-
-		var posJSON ={"name":posName,
-					"external_store_id":externalStoreID,
-					"fixed_amount":false,
-					"category_id":category,
-					"external_id":externalPOSID};
-
-
-
-		$.post("api/pos/create/",{json:JSON.stringify(posJSON)},function(results){
+		$.post("http://localhost:7071/api/pos/create",JSON.stringify(posJSON),function(results){
 			console.log("Crea POS/QR:");
 			console.log(results);
-
 			$("#responsePOS").text(JSON.stringify(results));
-
 		});
 	});
 
