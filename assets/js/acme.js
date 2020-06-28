@@ -175,7 +175,7 @@ $(document).ready(function() {
 								if(data.status=="closed" && data.external_reference==external_reference){
 									if(cashSound){playSound("cash")};
 									cashSound=false;
-									setTimeout(clearInterval(checkStatus),3000);
+									setTimeout(clearInterval(checkStatus),10000);
 									$('#exampleModal').modal("hide");
 									$('#paymentStatusNotification').text(JSON.stringify(data));
 
@@ -184,7 +184,7 @@ $(document).ready(function() {
 
 
 							
-						}, 3000); // finaliza intervalo
+						}, 10000); // finaliza intervalo
 
 					}); // end get pos information
 				
