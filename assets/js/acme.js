@@ -18,6 +18,8 @@
 
 $(document).ready(function() {
 	
+	var baseUrl = "http://localhost:7071/";
+
 	// Define 10 minutos de timeout de una orden
 	var orderTimeout = 60 * 10;
 
@@ -53,12 +55,11 @@ $(document).ready(function() {
 		  	var external_reference = $('#external_reference').val(); // obtención del external_id de la página
 		  	modal.find(".modal-body").html("<center><div id='qr'></div><div id='countDown'></div><br/><div id='loading'></div><br/><div id='orderStatus'></div><div id='orderResponse'></div></center>");
 		    modal.find(".btn-primary").text("Cancel");
-		    
-
+			
 		    // Muestra el código QR del punto de venta seleccionado
 
 		    // Llama al servicio de obtención de información de un POS/QR en base al external_pos_id o también llamado external_id
-			$.get("http://localhost:7071/api/pos", {"external_id": external_id, "external_store_id": store_id }, function(data)
+			$.get(baseUrl + "api/pos", {"external_id": external_id, "external_store_id": store_id }, function(data)
 			{
 				console.log("Obtención información de QR:");
 				console.log(data);
@@ -76,15 +77,19 @@ $(document).ready(function() {
 					// Agrega la URL notification_url 
 					// para recibir las notificaciones en tu endpoint público.
 
-					var orderJSON ={"external_reference": external_reference,
-									"notification_url": "",
-									"items" : items
-									};
+					var order =
+					{
+						"external_reference" : external_reference,
+						"notification_url" : baseUrl +"api/notification/create",
+						"items" : items
+					};
 
 					// Crea orden en base al external_id de la página
 
-					$.post("api/order/create/",{"external_id":external_id,"json":JSON.stringify(orderJSON)},function(data){
+					var orderJSON = JSON.stringify(order);
 
+					$.post(baseUrl + "api/order/create/" + external_id, orderJSON, function(data)
+					{
 						console.log("Crea orden:");
 						console.log(data);
 
@@ -96,7 +101,7 @@ $(document).ready(function() {
     					startTimer(orderTimeout, display);
 
     					// Cash sound?
-    					var cashSound=true;
+    					var cashSound = true;
 
 						// Inicia comprobación de estado de pago cada 3 segundos
 
@@ -104,7 +109,7 @@ $(document).ready(function() {
 
 							// Comprueba estado del pago vía Seach de Merchant_order
 
-							$.get("api/order/status/",{"external_reference":external_reference},function(data){
+							$.get(baseUrl + "api/order/status/" + external_reference,function(data){
 								
 								console.log("Search de Merchant_order:");
 								console.log(data);
@@ -146,7 +151,7 @@ $(document).ready(function() {
 							
 							// Comprueba el estado del pago de la orden en servicio de recepción de notificaciones
 
-							$.get("api/notifications/get/",{},function(data){
+							$.get(baseUrl + "api/notification/get/"+ external_reference, function(data){
 								console.log("Search Notifications:");
 								console.log(data);
 
@@ -191,10 +196,6 @@ $(document).ready(function() {
 
 			});
 
-
-		    
-
-
 		    // Si el cajero cancela la orden
 
 		    modal.find(".btn-primary").on("click",function(){ // Cancela la orden
@@ -202,7 +203,7 @@ $(document).ready(function() {
 		    	// Clear check status interval
 		    	clearInterval(checkStatus);
 
-				$.get("api/order/delete/",{"external_id":external_id},function(){
+				$.post(baseUrl + "api/order/delete/" + external_id, function() {
 					
 				});
 
@@ -340,7 +341,7 @@ $(document).ready(function() {
 		 };
 
 		console.log(storeJSON);
-		$.post("http://localhost:7071/api/store/create",JSON.stringify(storeJSON),function(results){
+		$.post(baseUrl + "api/store/create",JSON.stringify(storeJSON),function(results){
 			console.log("Crea store:");
 			console.log(results);
 			$("#responseStore").text(JSON.stringify(results));
@@ -369,7 +370,7 @@ $(document).ready(function() {
 			"external_id" : externalPOSID
 		};
 
-		$.post("http://localhost:7071/api/pos/create",JSON.stringify(posJSON),function(results){
+		$.post(baseUrl + "api/pos/create",JSON.stringify(posJSON),function(results){
 			console.log("Crea POS/QR:");
 			console.log(results);
 			$("#responsePOS").text(JSON.stringify(results));
@@ -390,7 +391,7 @@ var items = [{
 		    "picture_url":"https://globalassets.starbucks.com/assets/f12bc8af498d45ed92c5d6f1dac64062.jpg?impolicy=1by1_wide_1242",
 		    "description" : "Espresso shots topped with hot water create a light layer of crema culminating in this wonderfully rich cup with depth and nuance. Pro Tip: For an additional boost, ask your barista to try this with an extra shot.",
 		    "unit_price" : 90,
-		    "quantity" : 1
+		    "quantity" : 2
 		  },
 		  {
 		  	"id":"sku011",
