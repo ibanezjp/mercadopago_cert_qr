@@ -7,3 +7,5 @@ API was develeped used Azure Functions (serverless). You can find the source cod
 Website and API have continous deployment.
 
 Required exercise: https://github.com/ibanezjp/MercadoPago_Examen_QR_Vendedor
+
+https://www.youtube.com/watch?v=SYzYz6m0cCE&feature=youtu.be
