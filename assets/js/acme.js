@@ -59,7 +59,7 @@ $(document).ready(function() {
 		    // Muestra el código QR del punto de venta seleccionado
 
 		    // Llama al servicio de obtención de información de un POS/QR en base al external_pos_id o también llamado external_id
-			$.get(baseUrl + "api/pos", {"external_id": external_id, "external_store_id": store_id }, function(data)
+			$.get(baseUrl + "api/pos", {"external_id": external_id }, function(data)
 			{
 				console.log("Obtención información de QR:");
 				console.log(data);
