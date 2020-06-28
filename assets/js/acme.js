@@ -137,7 +137,7 @@ $(document).ready(function() {
 									if(orderStatus=="closed"){
 										if(cashSound){playSound("cash")};
 										cashSound=false;
-										setTimeout(clearInterval(checkStatus),3000);
+										setTimeout(clearInterval(checkStatus),10000);
 
 										$('#orderFinalStatus').text(elements[totalElements-1]);
 										$('#exampleModal').modal("hide");
