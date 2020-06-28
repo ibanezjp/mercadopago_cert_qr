@@ -5,3 +5,5 @@ Statics files are hosted in Azure Static Web Apps.
 API was develeped used Azure Functions (serverless). You can find the source code here: https://github.com/ibanezjp/mercadopago_cert_qr_api
 
 Website and API have continous deployment.
+
+Required exercise: https://github.com/ibanezjp/MercadoPago_Examen_QR_Vendedor
