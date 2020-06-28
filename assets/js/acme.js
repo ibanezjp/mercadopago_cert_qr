@@ -18,7 +18,7 @@
 
 $(document).ready(function() {
 	
-	var baseUrl = "http://localhost:7071/";
+	var baseUrl = "https://mercadopago.azurewebsites.net/";
 
 	// Define 10 minutos de timeout de una orden
 	var orderTimeout = 60 * 10;
